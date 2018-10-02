@@ -25,6 +25,7 @@ import org.apache.http.impl.client.HttpClients;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.tankofu.meshi.tw.data.CollectionAddResult;
+import jp.tankofu.meshi.tw.data.CollectionEntries;
 import jp.tankofu.meshi.tw.data.QueryResult;
 import jp.tankofu.meshi.tw.data.StatusInfo;
 import jp.tankofu.meshi.util.Utils;
@@ -44,6 +45,7 @@ public class Client {
 
 	public static final String SEARCH_URL = "https://api.twitter.com/1.1/search/tweets.json";
 	public static final String COLLECTION_ADD_URL = "https://api.twitter.com/1.1/collections/entries/add.json";
+	public static final String COLLECTION_ENTRIES_URL = "https://api.twitter.com/1.1/collections/entries.json";
 
 	private final AuthInfo authInfo;
 
@@ -77,6 +79,18 @@ public class Client {
 
 		return executeApiSimplePost(COLLECTION_ADD_URL, queryParams, this::checkCollectionAddResult,
 				this::constractTwApiException);
+	}
+
+	public CollectionEntries getCollectionEntries(String collectionId) throws TwApiException, IOException {
+		return getCollectionEntries(collectionId, Collections.emptyMap());
+	}
+
+	public CollectionEntries getCollectionEntries(String collectionId, Map<String, String> options)
+			throws TwApiException, IOException {
+		Map<String, String> queryParams = new HashMap<>();
+		queryParams.putAll(options);
+		queryParams.put("id", collectionId);
+		return executeApiGet(COLLECTION_ENTRIES_URL, queryParams, this::createEntries, this::constractTwApiException);
 	}
 
 	public <T> T executeApiGet(String url, Map<String, String> queryParams, ResponseHandler<T> contentHandler,
@@ -114,6 +128,12 @@ public class Client {
 	public CollectionAddResult checkCollectionAddResult(HttpResponse response) throws IOException {
 		try (InputStream in = response.getEntity().getContent()) {
 			return new ObjectMapper().readValue(in, CollectionAddResult.class);
+		}
+	}
+
+	public CollectionEntries createEntries(HttpResponse response) throws IOException {
+		try (InputStream in = response.getEntity().getContent()) {
+			return new ObjectMapper().readValue(in, CollectionEntries.class);
 		}
 	}
 
