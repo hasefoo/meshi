@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>meshi.tankofu.jp properties</comment>
+
+  <!-- Consumer API keys</comment -->
+  <entry key="consumer-key">Consumer Key</entry>
+  <entry key="consumer-secret">Consumer Secret</entry>
+
+  <!-- Access token and access token secret -->
+  <entry key="access-token">Access Token</entry>
+  <entry key="access-secret">Access Secret</entry>
+
+  <!-- Collection Id -->
+  <entry key="collection-id">Collection ID</entry>
+
+  <!-- Search Query -->
+  <entry key="query">#たんこうふメシ</entry>
+
+</properties>
