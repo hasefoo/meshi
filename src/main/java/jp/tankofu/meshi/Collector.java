@@ -74,6 +74,9 @@ public class Collector {
 	private List<StatusInfo> queryKeywordTweets() throws IOException, TwApiException {
 		List<StatusInfo> statuses = client.query(query);
 		Collections.sort(statuses, Comparator.comparingLong(StatusInfo::getId));
+
+		statuses.forEach(status -> logger.debug("QueryResult : " + status.getIdStr()));
+
 		return statuses;
 	}
 
@@ -81,9 +84,14 @@ public class Collector {
 		CollectionEntries entries = client.getCollectionEntries(collectionId, Map.of("count", "1"));
 		List<CollectionEntries.Tweet> tweets = entries.getCollectionEntries();
 		if (tweets.isEmpty()) {
+			logger.debug("LastEntryId not found.");
 			return null;
 		}
-		return tweets.get(0).getId();
+
+		String lastEntryId = tweets.get(0).getId();
+		logger.debug("LastEntryId : " + lastEntryId);
+
+		return lastEntryId;
 	}
 
 	private List<StatusInfo> filterTarget(List<StatusInfo> statuses, String collectionLastEntryId) {
